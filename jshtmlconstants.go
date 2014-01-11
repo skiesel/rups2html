@@ -21,12 +21,13 @@ const (
 
 	PlotClose = `		], {
 			series: {
+				points: { show: true },
 				lines: { show: true },
 			},
 			xaxis: {
 				mode: "time",
+				ticks: 4,
 				timezone: "browser",
-				ticks: 5,
 				twelveHourClock: true
 			},
 			yaxis: {
@@ -43,7 +44,7 @@ const (
 				}
 			},
 			legend: {
-				position: "sw"
+				position: "nw"
 			}
 		});
 `
@@ -52,7 +53,14 @@ const (
 		// Add the Flot version string to the footer
 
 		$("#footer").append("Flot " + $.plot.version);
+
+		//five minutes
+		setTimeout(refreshPage, 300000);
 	});
+
+	function refreshPage() {
+		 location.reload(false);
+	}
 
 	</script>
 </head>

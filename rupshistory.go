@@ -136,7 +136,9 @@ func (rh *RupsHistory) addCurrentRups() {
 		if i == 0 { //dateline
 			rh.addNewTimestamp(line)
 		} else { //cpu lines
-			rh.addNewMachineHistoryPoint(line)
+		       	if line != "" {
+			   rh.addNewMachineHistoryPoint(line)
+			}
 		}
 	}
 	rh.checkAndFixHistorySize()

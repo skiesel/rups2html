@@ -60,7 +60,7 @@ func update(rh *RupsHistory) {
 	rh.createHtmlPage()
 
 	if *scpDestination != "" {
-		scpCommand := fmt.Sprintf("scp %s %s", HtmlFile, scpDestination)
+		scpCommand := fmt.Sprintf("scp %s %s", HtmlFile, *scpDestination)
 		c := exec.Command("/bin/sh", "-c", scpCommand)
 		output, err := c.CombinedOutput()
 		if err != nil {
