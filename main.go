@@ -12,8 +12,9 @@ import (
 )
 
 var (
-	logfile        = log.New(os.Stderr, "", log.LstdFlags)
-	scpDestination = flag.String("scpremote", "", "The destination for the scp command. You need to set up keys for this.")
+	logfile          = log.New(os.Stderr, "", log.LstdFlags)
+	ScpDestination   = flag.String("scpremote", "", "The destination for the scp command. You need to set up keys for this.")
+	MaxHistoryPoints = flag.Int("numpts", 50, "The maximum number of history points to maintain.")
 )
 
 func main() {
@@ -59,8 +60,8 @@ func update(rh *RupsHistory) {
 	rh.addCurrentRups()
 	rh.createHtmlPage()
 
-	if *scpDestination != "" {
-		scpCommand := fmt.Sprintf("scp %s %s", HtmlFile, *scpDestination)
+	if *ScpDestination != "" {
+		scpCommand := fmt.Sprintf("scp %s %s", HtmlFile, *ScpDestination)
 		c := exec.Command("/bin/sh", "-c", scpCommand)
 		output, err := c.CombinedOutput()
 		if err != nil {
