@@ -35,3 +35,7 @@
 .legend table {
 	border-spacing: 5px;
 }
+
+#service-down {
+	display:none;
+}

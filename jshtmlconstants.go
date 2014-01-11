@@ -56,6 +56,14 @@ const (
 
 		//five minutes
 		setTimeout(refreshPage, 300000);
+
+		// if the last update was over ten minutes ago let the user
+		// know that the service is probably down
+		var lastUpdate = moment().diff(d0[d0.length-1][0], 'minute');
+		if(lastUpdate >= 10) {
+			$('#service-down').show();
+			$('#service-down').html("The service might be down. Last update " + lastUpdate + " minutes ago.");
+		}
 	});
 
 	function refreshPage() {
@@ -66,6 +74,7 @@ const (
 </head>
 <body>
 	<div id="content">
+		<div id="service-down"></div>
 `
 
 	Footer = `
