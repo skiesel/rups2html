@@ -12,9 +12,8 @@ import (
 )
 
 const (
-	HistoryFile      = "rups.history"
-	MaxHistoryPoints = 50
-	DateDelimiter    = "DATEDELIM"
+	HistoryFile   = "rups.history"
+	DateDelimiter = "DATEDELIM"
 )
 
 type RupsHistory struct {
@@ -136,8 +135,8 @@ func (rh *RupsHistory) addCurrentRups() {
 		if i == 0 { //dateline
 			rh.addNewTimestamp(line)
 		} else { //cpu lines
-		       	if line != "" {
-			   rh.addNewMachineHistoryPoint(line)
+			if line != "" {
+				rh.addNewMachineHistoryPoint(line)
 			}
 		}
 	}
@@ -150,8 +149,8 @@ func (rh *RupsHistory) checkAndFixHistorySize() {
 		if max < len(usage) {
 			max = len(usage)
 
-			if max >= MaxHistoryPoints {
-				max = MaxHistoryPoints
+			if max >= *MaxHistoryPoints {
+				max = *MaxHistoryPoints
 				break
 			}
 		}
@@ -168,15 +167,15 @@ func (rh *RupsHistory) checkAndFixHistorySize() {
 		}
 	}
 
-	if len(rh.usages[0]) > MaxHistoryPoints {
-		start := len(rh.usages[0]) - MaxHistoryPoints
+	if len(rh.usages[0]) > *MaxHistoryPoints {
+		start := len(rh.usages[0]) - *MaxHistoryPoints
 		for i, usage := range rh.usages {
 			rh.usages[i] = usage[start:]
 		}
 	}
 
-	if len(rh.timestamps) >= MaxHistoryPoints {
-		start := len(rh.timestamps) - MaxHistoryPoints
+	if len(rh.timestamps) >= *MaxHistoryPoints {
+		start := len(rh.timestamps) - *MaxHistoryPoints
 		rh.timestamps = rh.timestamps[start:]
 	}
 }
