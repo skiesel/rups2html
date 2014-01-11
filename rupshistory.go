@@ -124,8 +124,7 @@ func (rh *RupsHistory) addHistoryPoint(id, val string) {
 }
 
 func (rh *RupsHistory) addCurrentRups() {
-	c := exec.Command("/bin/sh", "-c", "cat rups.fake")
-	//	c := exec.Command("/bin/sh", "-c", "rups")
+	c := exec.Command("/bin/sh", "-c", "rups")
 	output, err := c.CombinedOutput()
 	if err != nil {
 		logfile.Fatalf("failed output=[%s]: %s\n", output, err)

@@ -36,8 +36,7 @@ func main() {
 	}()
 
 	//Update at 5 minute intervals
-	//ticker := time.NewTicker(5 * time.Minute)
-	ticker := time.NewTicker(10 * time.Second)
+	ticker := time.NewTicker(5 * time.Minute)
 	update(history)
 	go func() {
 		for {
