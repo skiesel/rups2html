@@ -9,7 +9,7 @@ A silly go program that runs "rups" and uses flot to create an html page showing
 =========
 
 I find that doing something like this is quite helpful:
-```
+```bash
 function checkAndRunrups2html() {
     if [ "$(pidof rups2html)" ]; then
         echo "rups2html is already running"
