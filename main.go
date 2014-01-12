@@ -57,11 +57,11 @@ func main() {
 }
 
 func update(rh *RupsHistory) {
-	rh.addCurrentRups()
-	rh.createHtmlPage()
+//	rh.addCurrentRups()
+	rh.createJSONFile()
 
 	if *ScpDestination != "" {
-		scpCommand := fmt.Sprintf("scp %s %s", HtmlFile, *ScpDestination)
+		scpCommand := fmt.Sprintf("scp %s %s", JSONFile, *ScpDestination)
 		c := exec.Command("/bin/sh", "-c", scpCommand)
 		output, err := c.CombinedOutput()
 		if err != nil {

@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>RUPS</title>
+
+	<link href="css/examples.css" rel="stylesheet" type="text/css">
+
+	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+	<script type="text/javascript" src="js/moment.min.js"></script>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.flot.js"></script>
+	<script type="text/javascript" src="js/jquery.flot.time.min.js"></script>
+<script type="text/javascript">
+	$(function () {
+		refreshData()
+		
+		//five minutes
+		//setInterval(refreshData, 300000);
+
+		// Add the Flot version string to the footer
+		$("#footer").append("Flot " + $.plot.version);
+
+	});
+
+	var plots = [];
+
+	function refreshData() {
+		$.getJSON("js/rups.json", function(data) {
+			checkIfStaleData(data);
+			
+			if(plots.length <= 0)
+				plots = new Array(data.datasets.length)
+
+			for(var i = 0; i < data.datasets.length; i++) {
+				updatePlot(i, data.datasets[i], data.timestamps);
+			}
+		});
+	}
+
+	function checkIfStaleData(data) {
+			// if the last update was over ten minutes ago let the user
+			// know that the service is probably down
+			var numPoints = data.timestamps.length;
+			var latestTimestamp = data.timestamps[numPoints-1];
+			var lastUpdate = moment().diff(moment(latestTimestamp), 'minute');
+
+			if(lastUpdate >= 10) {
+			 	$('#service-down').show();
+			 	$('#service-down').html("The service might be down. Last update " + moment(latestTimestamp).from(moment()));
+			}
+			else {
+				$('#service-down').hide();
+			}
+	}
+
+	function updatePlot(plotIndex, plotData, timestamps) {
+		var jqueryPlotId = '#placeholder' + plotIndex;
+
+		if($(jqueryPlotId).length <= 0) {
+			$template = $('.demo-container.template').clone();
+			$template.removeClass('template');
+			$template.find('.demo-placeholder').attr('id', 'placeholder' + plotIndex);
+			$('#content').append($template);
+		}
+
+		if(!plots[plotIndex]) {
+			plots[plotIndex] = $.plot(jqueryPlotId,
+																[{
+																	label: plotData.id,
+																	data: buildPlottableDataset(plotData.usages, timestamps)
+																}],
+																{
+																	series: {
+																		points: { show: true, 
+																							radius: 2
+																						},
+																		lines: {
+																							show: true
+																						},
+																	},
+																	xaxis: {
+																		mode: "time",
+																		ticks: 4,
+																		timezone: "browser",
+																		twelveHourClock: true
+																	},
+																	yaxis: {
+																		min: -1,
+																		max: 2.,
+																	},
+																	grid: {
+																		backgroundColor: { colors: [ "#fff", "#eee" ] },
+																		borderWidth: {
+																			top: 1,
+																			right: 1,
+																			bottom: 2,
+																			left: 2
+																		}
+																	},
+																	legend: {
+																		position: "nw"
+																	}
+																}
+															);
+			return;
+		}
+
+		plot.setData(buildPlottableDataset(plotData.usages, timestamps));
+		// Since the axes don't change, we don't need to call plot.setupGrid()
+		plot.draw();
+	}
+
+	function buildPlottableDataset(usages, timestamps) {
+		var data = [];
+		for(var i = 0; i < timestamps.length; i++) {
+			data.push([moment(timestamps[i]).toDate(),
+								usages[i]])
+		}
+		return data;
+	}
+
+</script>
+</head>
+<body>
+	<div id="content">
+		<div id="service-down"></div>
+		<div class="demo-container template"><div class="demo-placeholder"></div></div>
+	</div>
+
+	<div id="footer">Powered by Go and </div>
+
+</body>
+</html>
