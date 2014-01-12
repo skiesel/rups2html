@@ -57,7 +57,7 @@ func main() {
 }
 
 func update(rh *RupsHistory) {
-//	rh.addCurrentRups()
+	rh.addCurrentRups()
 	rh.createJSONFile()
 
 	if *ScpDestination != "" {
