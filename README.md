@@ -28,7 +28,7 @@ function checkAndRunrups2html() {
         echo "rups2html is already running"
     else
         echo "starting rups2html"
-	(cd ~/gopath/src/github.com/skiesel/rups2html; ~/gopath/bin/rups2html -scpremote="SERVER:path/to/index.html" &)
+	(cd ~/gopath/src/github.com/skiesel/rups2html; ~/gopath/bin/rups2html -scpremote="SERVER:path/to/rups.json" &)
     fi
 }
 
