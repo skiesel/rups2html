@@ -1,12 +1,13 @@
 rups2html
 =========
 
-A silly go program that runs "rups" and uses [flot](https://github.com/flot) to create an html file showing some cpu usage history as graphs.
+A silly go program that runs "rups" and uses [flot](https://github.com/flot) to create an html file showing some cpu usage history in plot form.
 
-This is one of the most basic graphs you can create with flot and it gets the point across. The resulting html file created will have one of these for each server, tiled.
+This is one of the most basic plots you can create with flot (it does not do flot justice), but it gets the point across.
 
 ![alt text](https://raw.github.com/skiesel/rups2html/master/images/screenshot.png "rups2html single tile screenshot")
 
+After running rups2html the resulting json file can be parsed by index.html and will display a plot for server, tiled. Check it out in [action](http://www.cs.unh.edu/~skiesel/rups/).
 
 =========
 
@@ -28,7 +29,7 @@ function checkAndRunrups2html() {
         echo "rups2html is already running"
     else
         echo "starting rups2html"
-	(cd ~/gopath/src/github.com/skiesel/rups2html; ~/gopath/bin/rups2html -scpremote="SERVER:path/to/index.html" &)
+	(cd ~/gopath/src/github.com/skiesel/rups2html; ~/gopath/bin/rups2html -scpremote="SERVER:path/to/rups.json" &)
     fi
 }
 
