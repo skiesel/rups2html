@@ -15,10 +15,15 @@ var (
 	logfile          = log.New(os.Stderr, "", log.LstdFlags)
 	ScpDestination   = flag.String("scpremote", "", "The destination for the scp command. You need to set up keys for this.")
 	MaxHistoryPoints = flag.Int("numpts", 50, "The maximum number of history points to maintain.")
+	Frequency        = flag.Int("freq", 5, "The frequency at which to poll rups. {1, 5, 15}")
 )
 
 func main() {
 	flag.Parse()
+
+	if *Frequency != 1 && *Frequency != 5 && *Frequency != 15 {
+		panic("Frequency provide is not 1, 5 or 15")
+	}
 
 	history := readRupsHistory()
 
@@ -36,8 +41,8 @@ func main() {
 		}
 	}()
 
-	//Update at 5 minute intervals
-	ticker := time.NewTicker(5 * time.Minute)
+	//Update at frequency minute intervals
+	ticker := time.NewTicker(time.Duration(*Frequency) * time.Minute)
 	update(history)
 	go func() {
 		for {

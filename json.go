@@ -36,8 +36,10 @@ func (rh *RupsHistory) createJSONFile() {
 
 func writeJSONFile(w *bufio.Writer, rh *RupsHistory, sortedLookup pairSlice) {
 
+	frequency := fmt.Sprintf("\"update_frequency\": %d", *Frequency)
+
 	timestamps := fmt.Sprintf("\"timestamps\": [\n\t\"%s\"\n]", strings.Join(rh.timestamps, "\", \n\t\""))
-	
+
 	datasetObjects := make([]string, len(sortedLookup))
 	for dsIndex, dsValues := range sortedLookup {
 		datasetName := fmt.Sprintf("\"id\": \"%s\",", dsValues.val)
@@ -46,6 +48,6 @@ func writeJSONFile(w *bufio.Writer, rh *RupsHistory, sortedLookup pairSlice) {
 		datasetObjects[dsIndex] = datasetObject
 	}
 
-	json := fmt.Sprintf("{\n%s,\n\"datasets\":\n[%s]}", timestamps, strings.Join(datasetObjects, ",\n"))
+	json := fmt.Sprintf("{\n%s,\n%s,\n\"datasets\":\n[%s]}", frequency, timestamps, strings.Join(datasetObjects, ",\n"))
 	write(w, json)
 }

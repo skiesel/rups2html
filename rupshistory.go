@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/exec"
 	"sort"
-	"strconv"
 	"strings"
 )
 
@@ -186,37 +185,29 @@ func (rh *RupsHistory) addNewTimestamp(timestamp string) {
 
 func (rh *RupsHistory) addNewMachineHistoryPoint(machineLine string) {
 	//ai1.cs.unh.edu        17:01 up   2 days,    8:04,    0 user, load 0.00 0.00 0.00
-	//    0                   1    2     3          4      5   6     7    8    9   10
+	//    0                   1    2   3  4         5      6  7      8    9   10   11
 	tokens := strings.Split(machineLine, " ")
 	machine := tokens[0]
 	machineTokens := strings.Split(machine, ".")
 	machineId := machineTokens[0]
 
 	count := 0
-	avgL := 0.
 	for _, token := range tokens {
-		switch count {
-		case 8:
-		case 9:
-		case 10:
-			val, err := strconv.ParseFloat(token, 64)
-			if err != nil {
-				// This machine will be missing a data point, but
-				// we'll resolve this in checkAndFixHistorySize
-				return
-			}
-			avgL += val
+		switch {
+		case count == 9 && *Frequency == 1:
+			rh.addHistoryPoint(machineId, token)
+			return
+		case count == 10 && *Frequency == 5:
+			rh.addHistoryPoint(machineId, token)
+			return
+		case count == 11 && *Frequency == 15:
+			rh.addHistoryPoint(machineId, token)
+			return
 		}
 		if token != "" {
 			count++
 		}
 	}
-
-	avgL /= 3
-
-	floatString := strconv.FormatFloat(avgL, 'f', -1, 64)
-
-	rh.addHistoryPoint(machineId, floatString)
 }
 
 func (rh *RupsHistory) dumpText() {
