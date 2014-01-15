@@ -15,8 +15,14 @@
 	<script type="text/javascript" src="js/jquery.flot.threshold.multiple.js"></script>
 	
 	<script type="text/javascript">
+
+		var colorConstraints = [];
+
 		$(function () {
-			refreshData()
+
+			colorConstraints = generateColorConstraints();
+
+			refreshData();
 
 			//five minutes
 			setInterval(refreshData, 300000);
@@ -56,43 +62,68 @@
 			}
 		}
 
-		var constraints = [{
-			threshold: 0.0,
-			color: "#0000FF",
-			evaluate: function (y, threshold) {
-				return y < threshold;
-			}
-		}];
+		function getHex(red, green, blue) {
+			return "#" + (red < 16 ? "0" : "") +red.toString(16)
+							 	+ (green < 16 ? "0" : "") + green.toString(16)
+							 	+ (blue < 16 ? "0" : "") + blue.toString(16);
+		}
 
-		var howmanycolors = 50;
-		var maxThreshold = 1.2;
-		var thresholdIncrement = maxThreshold / howmanycolors;
+		function simpleLessThan(x, y) { return x < y; }
 
-		for(var i = 0; i < howmanycolors; i++) {
-			red = Math.floor((255*i)/howmanycolors);
-			green = Math.floor((255*(howmanycolors-i))/howmanycolors);
-			blue = 0;
-			hex = "#" + (red < 16 ? "0" : "") +red.toString(16)
-							+ (green < 16 ? "0" : "") + green.toString(16)
-							+ (blue < 16 ? "0" : "") + blue.toString(16);
+		function generateColorConstraints() {
+			var gradientStart = 0.0;
+			var gradientEnd = 2.0;
 
-			constraints.push({
-					threshold: thresholdIncrement * i,
-					color: hex,
-					evaluate: function (y, threshold) {
-						return y < threshold;
+			var constraints = [
+				{
+					threshold: gradientStart,
+					color: "#0000FF",
+					evaluate: simpleLessThan
+				}
+			];
+
+			var red = 0;
+			var green = 255;
+			var stepSize = 10;
+			var blue = 0;
+
+			var thresholdIncrement = (gradientEnd - gradientStart) / 52;
+			var currentThreshold = gradientStart;
+			while(red < 255) {
+    		red += stepSize;
+    		if(red > 255) { red = 255; }
+    		constraints.push(
+    			{
+						threshold: currentThreshold,
+						color: getHex(red,green,blue),
+						evaluate: simpleLessThan
 					}
+				);
+				currentThreshold += thresholdIncrement;
+			}
+			while(green > 0) {
+    		green -= stepSize;
+    		if(green < 0) { green = 0; }
+    		constraints.push(
+    			{
+						threshold: currentThreshold,
+						color: getHex(red,green,blue),
+						evaluate: simpleLessThan
+					}
+				);
+				currentThreshold += thresholdIncrement;
+			}
+
+			constraints.push(
+  			{
+					threshold: 10,
+					color: getHex(255,0,0),
+					evaluate: simpleLessThan
 				}
 			);
+
+			return constraints;
 		}
-		constraints.push({
-				threshold: 2,
-				color: "#FF0000",
-				evaluate: function (y, threshold) {
-					return y < threshold;
-				}
-			}
-		);
 
 		function updatePlot(plotIndex, plotData, timestamps) {
 			var jqueryPlotId = '#placeholder' + plotIndex;
@@ -110,7 +141,7 @@
 				[
 					{
 						data: buildPlottableDataset(plotData.usages, timestamps),
-						constraints: constraints
+						constraints: colorConstraints
 					}
 				],
 				{
@@ -154,7 +185,7 @@
 			} else {
 				plots[plotIndex].setData([{
 					data: buildPlottableDataset(plotData.usages, timestamps),
-					constraints: constraints
+					constraints: colorConstraints
 				}]);
 				plots[plotIndex].setupGrid();
 				plots[plotIndex].draw();
