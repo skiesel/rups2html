@@ -83,6 +83,7 @@
 				$template = $('.demo-container.template').clone();
 				$template.removeClass('template');
 				$template.find('.demo-placeholder').attr('id', 'placeholder' + plotIndex);
+				$template.find('.plot-title').html(plotData.id);
 				$('#content').append($template);
 			}
 
@@ -154,6 +155,7 @@
 	<div id="content">
 		<div id="service-down"></div>
 		<div class="demo-container template">
+			<span class="plot-title"></div>
 			<div class="demo-placeholder"></div>
 		</div>
 	</div>
