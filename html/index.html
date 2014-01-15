@@ -106,13 +106,14 @@
 			}
 
 			if (!plots[plotIndex]) {
-				plots[plotIndex] = $.plot(jqueryPlotId, [{
-					label: plotData.id,
-					data: []
-				}, {
-					data: buildPlottableDataset(plotData.usages, timestamps),
-					constraints: constraints
-				}], {
+				plots[plotIndex] = $.plot(jqueryPlotId,
+				[
+					{
+						data: buildPlottableDataset(plotData.usages, timestamps),
+						constraints: constraints
+					}
+				],
+				{
 					series: {
 						points: {
 							show: true,
@@ -141,10 +142,7 @@
 							right: 1,
 							bottom: 2,
 							left: 2
-						}
-					},
-					legend: {
-						position: "nw"
+						},
 					}
 				});
 				
@@ -155,8 +153,8 @@
 
 			} else {
 				plots[plotIndex].setData([{
-					label: plotData.id,
-					data: buildPlottableDataset(plotData.usages, timestamps)
+					data: buildPlottableDataset(plotData.usages, timestamps),
+					constraints: constraints
 				}]);
 				plots[plotIndex].setupGrid();
 				plots[plotIndex].draw();
@@ -179,7 +177,7 @@
 	<div id="content">
 		<div id="service-down"></div>
 		<div class="demo-container template">
-			<span class="plot-title"></div>
+			<span class="plot-title"></span>
 			<div class="demo-placeholder"></div>
 		</div>
 	</div>
