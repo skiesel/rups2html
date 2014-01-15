@@ -57,24 +57,42 @@
 		}
 
 		var constraints = [{
-			threshold: 0.2,
+			threshold: 0.0,
 			color: "#0000FF",
 			evaluate: function (y, threshold) {
 				return y < threshold;
 			}
-		}, {
-			threshold: 1.1,
-			color: "#00FF00",
-			evaluate: function (y, threshold) {
-				return y < threshold;
-			}
-		}, {
-			threshold: 2,
-			color: "#FF0000",
-			evaluate: function (y, threshold) {
-				return y < threshold;
-			}
 		}];
+
+		var howmanycolors = 50;
+		var maxThreshold = 1.2;
+		var thresholdIncrement = maxThreshold / howmanycolors;
+
+		for(var i = 0; i < howmanycolors; i++) {
+			red = Math.floor((255*i)/howmanycolors);
+			green = Math.floor((255*(howmanycolors-i))/howmanycolors);
+			blue = 0;
+			hex = "#" + (red < 16 ? "0" : "") +red.toString(16)
+							+ (green < 16 ? "0" : "") + green.toString(16)
+							+ (blue < 16 ? "0" : "") + blue.toString(16);
+
+			constraints.push({
+					threshold: thresholdIncrement * i,
+					color: hex,
+					evaluate: function (y, threshold) {
+						return y < threshold;
+					}
+				}
+			);
+		}
+		constraints.push({
+				threshold: 2,
+				color: "#FF0000",
+				evaluate: function (y, threshold) {
+					return y < threshold;
+				}
+			}
+		);
 
 		function updatePlot(plotIndex, plotData, timestamps) {
 			var jqueryPlotId = '#placeholder' + plotIndex;
