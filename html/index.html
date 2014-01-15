@@ -129,6 +129,12 @@
 						position: "nw"
 					}
 				});
+				
+				var oldHeight = parseInt($template.css("height").replace("px", ""));
+        var heightAddition = parseInt($template.find(".plot-title").css("height").replace("px", ""));
+				var newHeight = oldHeight + heightAddition + "px";
+				$template.css("height", newHeight);
+
 			} else {
 				plots[plotIndex].setData([{
 					label: plotData.id,
