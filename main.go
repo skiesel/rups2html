@@ -36,7 +36,6 @@ func main() {
 	go func() {
 		select {
 		case <-c:
-			history.saveRupsHistory()
 			quit <- true
 		}
 	}()
@@ -73,4 +72,5 @@ func update(rh *RupsHistory) {
 			logfile.Fatalf("failed output=[%s]: %s\n", output, err)
 		}
 	}
+	rh.saveRupsHistory()
 }
