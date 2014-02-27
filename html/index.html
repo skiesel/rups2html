@@ -128,6 +128,13 @@
 		function updatePlot(plotIndex, plotData, timestamps) {
 			var jqueryPlotId = '#placeholder' + plotIndex;
 
+			   var yMax = 2.0;
+			   for(var i = 0; i < plotData.usages.length; i++) {
+			       if(plotData.usages[i] > yMax)
+				   yMax = plotData.usages[i];
+			   }
+			   
+
 			if ($(jqueryPlotId).length <= 0) {
 				$template = $('.demo-container.template').clone();
 				$template.removeClass('template');
@@ -162,7 +169,7 @@
 					},
 					yaxis: {
 						min: -1,
-						max: 2.,
+						max: yMax,
 					},
 					grid: {
 						backgroundColor: {
